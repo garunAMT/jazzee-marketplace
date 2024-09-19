@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { BarChart, Lock, Music, Users } from "lucide-react"
+import Testimonials from "@/components/shared/Testimonials"
 
 export default function Hero() {
   return (
@@ -80,20 +81,7 @@ export default function Hero() {
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl text-center mb-8">
               What Our Customers Say
             </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="flex flex-col justify-between p-6 bg-white rounded-lg shadow-lg">
-                <p className="text-lg mb-4">"Jazzee has transformed the way we do business. It's intuitive and powerful."</p>
-                <p className="text-sm font-semibold">- Sarah J., CEO of TechCorp</p>
-              </div>
-              <div className="flex flex-col justify-between p-6 bg-white rounded-lg shadow-lg">
-                <p className="text-lg mb-4">"The analytics provided by Jazzee are unparalleled. It's a game-changer."</p>
-                <p className="text-sm font-semibold">- Mike R., Marketing Director</p>
-              </div>
-              <div className="flex flex-col justify-between p-6 bg-white rounded-lg shadow-lg">
-                <p className="text-lg mb-4">"Customer support is top-notch. They're always there when you need them."</p>
-                <p className="text-sm font-semibold">- Emily L., Small Business Owner</p>
-              </div>
-            </div>
+            <Testimonials />
           </div>
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
