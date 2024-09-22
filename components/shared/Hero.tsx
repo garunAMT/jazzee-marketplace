@@ -7,7 +7,7 @@ import Testimonials from "@/components/shared/Testimonials"
 export default function Hero() {
   return (
     <div className="flex flex-col min-h-screen">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+      {/* <header className="px-4 lg:px-6 h-14 flex items-center">
         <Link className="flex items-center justify-center" href="#">
           <Music className="h-6 w-6" />
           <span className="ml-2 text-lg font-bold">Jazzee</span>
@@ -22,11 +22,11 @@ export default function Hero() {
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="auction-results">
             Results
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Contact
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="dashboard">
+            Dashboard
           </Link>
         </nav>
-      </header>
+      </header> */}
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6">
