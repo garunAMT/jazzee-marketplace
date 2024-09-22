@@ -13,14 +13,14 @@ export default function Hero() {
           <span className="ml-2 text-lg font-bold">Jazzee</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Features
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/products">
+            Products
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Pricing
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="create-auction">
+            Auction
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            About
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="auction-results">
+            Results
           </Link>
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
             Contact
