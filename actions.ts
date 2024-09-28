@@ -33,6 +33,7 @@ export async function addProduct(formData: FormData) {
   return redirect("/products");
 }
 
+
 // Fetching all products
 export async function getAllProducts() {
   const products = await prisma.product.findMany();
@@ -86,4 +87,54 @@ export async function getAuctionsByInitiatorId(initiatorId: string) {
   return auctions;
 }
 
+
+// Fetching auctions by "owner of product"
+// here, we are basically showig the auction only to the selected product's owner, so that only he can take part in that bidding
+// the auctions details should also mention the products details, so that the owner can know what he is bidding for
+export async function getAuctionsByProductOwnerId(ownerId: string) {
+  const auctions = await prisma.auction.findMany({
+    where: {
+      AuctionProduct: {
+        some: {
+          product: {
+            ownerId: ownerId,
+          },
+        },
+      },
+    },
+    include: {
+      AuctionProduct: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+  return auctions;
+}
+
+
+
+// Create a new bid
+export async function createBid(formData: FormData) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user || user == null || !user.id) throw new Error("User not found");
+
+  const { auctionId, bidAmount } = Object.fromEntries(formData);
+
+  try {
+    const bid = await prisma.bid.create({
+      data: {
+        auctionId: auctionId as string,
+        userId: user.id,
+        bidAmount: parseFloat(bidAmount as string),
+      },
+    });
+  } catch (error) {
+    console.error("Error creating bid:", error);
+    throw error;
+  }
+}
 
