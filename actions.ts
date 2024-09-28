@@ -41,7 +41,38 @@ export async function createAuction(formData: FormData) {
 
   if (!user || user == null || !user.id) throw new Error("User not found");
 
-  const { auctionName, selectedProducts, budget, requirements, bidDuration, bidDecrement, startDate, endDate } = Object.fromEntries(formData.entries());
+  const { auctionName, description, startingPrice, startTime, endTime } = Object.fromEntries(formData.entries());
+
+  try {
+    const auction = await prisma.auction.create({
+      data: {
+        auctionName: auctionName as string,
+        description: description as string,
+        startingPrice: parseFloat(startingPrice as string),
+        startTime: new Date(startTime as string),
+        endTime: new Date(endTime as string),
+        initiatorId: user.id,
+      },
+    });
+
+    revalidatePath("/auctions");
+  } catch (error) {
+    console.error("Error creating auction:", error);
+    throw error;
+  }
+  return redirect("/auctions");
 }
 
+// Fetching auctions by initiatorId
+export async function getAuctionsByInitiatorId(initiatorId: string) {
 
+  const auctions = await prisma.auction.findMany({
+    where: {
+      initiatorId: initiatorId,
+    },
+    include: {
+      AuctionProduct: true,
+    },
+  });
+  return auctions;
+}

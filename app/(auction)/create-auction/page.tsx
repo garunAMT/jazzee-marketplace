@@ -11,6 +11,14 @@ import { PlusIcon, XIcon } from 'lucide-react'
 import { useToast } from "@/hooks/use-toast"
 import { createAuction } from '@/actions'
 
+interface AuctionFormData {
+  auctionName: string;
+  description: string;
+  startingPrice: number;
+  startTime: Date;
+  endTime: Date;
+}
+
 export default function ReverseDutchAuctionCreation() {
     const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
@@ -60,6 +68,7 @@ export default function ReverseDutchAuctionCreation() {
           </CardContent>
         </Card>
 
+{/* Product Selection Section */}
         <Card>
           <CardHeader>
             <CardTitle>1. Product Selection</CardTitle>
@@ -128,31 +137,33 @@ export default function ReverseDutchAuctionCreation() {
           </CardContent>
         </Card>
 
+{/* Budget and Requirements Section */}
         <Card>
           <CardHeader>
             <CardTitle>2. Budget and Requirements</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="budget">Set Budget</Label>
+              <Label htmlFor="startingPrice">Set Starting Price</Label>
               <Input
-                id="budget"
+                id="startingPrice"
                 placeholder="Enter your maximum budget"
-                name="budget"
+                name="startingPrice"
               />
             </div>
             <div>
-              <Label htmlFor="requirements">Specific Requirements</Label>
+              <Label htmlFor="description">Description</Label>
               <Textarea
-                id="requirements"
+                id="description"
                 placeholder="Outline your needs (e.g., number of licenses, specific features, support level)"
-                name="requirements"
+                name="description"
               />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+{/* Auction Details Section */}
+        {/* <Card>
           <CardHeader>
             <CardTitle>3. Auction Details</CardTitle>
           </CardHeader>
@@ -183,9 +194,10 @@ export default function ReverseDutchAuctionCreation() {
               />
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
-        <Card>
+{/* Selected Vendors/Products Section */}
+        {/* <Card>
           <CardHeader>
             <CardTitle>4. Selected Vendors/Products</CardTitle>
           </CardHeader>
@@ -199,27 +211,28 @@ export default function ReverseDutchAuctionCreation() {
               ))}
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
+{/* Auction Timeline Section */}
         <Card>
           <CardHeader>
             <CardTitle>5. Auction Timeline</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="startDate">Start Date/Time</Label>
+              <Label htmlFor="startTime">Start Date/Time</Label>
               <Input
-                id="startDate"
+                id="startTime"
                 type="datetime-local"
-                name="startDate"
+                name="startTime"
               />
             </div>
             <div>
-              <Label htmlFor="endDate">End Date/Time</Label>
+              <Label htmlFor="endTime">End Date/Time</Label>
               <Input
-                id="endDate"
+                id="endTime"
                 type="datetime-local"
-                name="endDate"
+                name="endTime"
               />
             </div>
           </CardContent>
@@ -255,6 +268,7 @@ export default function ReverseDutchAuctionCreation() {
           </CardContent>
         </Card> */}
 
+{/* Preview and Submit Section */}
         <Card>
           {/* <CardHeader>
             <CardTitle>7. Preview and Submit</CardTitle>
