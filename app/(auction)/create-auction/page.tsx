@@ -9,18 +9,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { PlusIcon, XIcon } from 'lucide-react'
 import { useToast } from "@/hooks/use-toast"
+import { createAuction } from '@/actions'
 
 export default function ReverseDutchAuctionCreation() {
     const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
-    const [auctionName, setAuctionName] = useState<string>('');
-    const [budget, setBudget] = useState<string>('');
-    const [requirements, setRequirements] = useState<string>('');
-    const [bidDuration, setBidDuration] = useState<string>('24');
-    const [bidDecrement, setBidDecrement] = useState<string>('');
-    const [startDate, setStartDate] = useState<string>('');
-    const [endDate, setEndDate] = useState<string>('');
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const { toast } = useToast();
   
@@ -43,11 +37,6 @@ export default function ReverseDutchAuctionCreation() {
       setSelectedProducts(selectedProducts.filter(product => product !== productToRemove));
     };
   
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      console.log('Auction created:', { auctionName, selectedProducts, budget, requirements, bidDuration, bidDecrement, startDate, endDate });
-    };
-  
     // Mock product search function
     const searchProducts = (term: string): string[] => {
       const allProducts = ['GitHub', 'GitLab', 'Bitbucket', 'Jira', 'Confluence', 'Trello'];
@@ -57,7 +46,7 @@ export default function ReverseDutchAuctionCreation() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Create Reverse Dutch Auction</h1>
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form action={createAuction} className="space-y-8">
         <Card>
           <CardHeader>
             <CardTitle>Auction Name</CardTitle>
@@ -66,8 +55,7 @@ export default function ReverseDutchAuctionCreation() {
           <CardContent>
             <Input
               placeholder="Enter auction name"
-              value={auctionName}
-              onChange={(e) => setAuctionName(e.target.value)}
+              name="auctionName"
             />
           </CardContent>
         </Card>
@@ -150,8 +138,7 @@ export default function ReverseDutchAuctionCreation() {
               <Input
                 id="budget"
                 placeholder="Enter your maximum budget"
-                value={budget}
-                onChange={(e) => setBudget(e.target.value)}
+                name="budget"
               />
             </div>
             <div>
@@ -159,8 +146,7 @@ export default function ReverseDutchAuctionCreation() {
               <Textarea
                 id="requirements"
                 placeholder="Outline your needs (e.g., number of licenses, specific features, support level)"
-                value={requirements}
-                onChange={(e) => setRequirements(e.target.value)}
+                name="requirements"
               />
             </div>
           </CardContent>
@@ -177,7 +163,7 @@ export default function ReverseDutchAuctionCreation() {
             </div>
             <div>
               <Label htmlFor="bidDuration">Bid Duration</Label>
-              <Select value={bidDuration} onValueChange={setBidDuration}>
+              <Select name="bidDuration">
                 <SelectTrigger>
                   <SelectValue placeholder="Select bid duration" />
                 </SelectTrigger>
@@ -193,8 +179,7 @@ export default function ReverseDutchAuctionCreation() {
               <Input
                 id="bidDecrement"
                 placeholder="Enter bid decrement amount"
-                value={bidDecrement}
-                onChange={(e) => setBidDecrement(e.target.value)}
+                name="bidDecrement"
               />
             </div>
           </CardContent>
@@ -226,8 +211,7 @@ export default function ReverseDutchAuctionCreation() {
               <Input
                 id="startDate"
                 type="datetime-local"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
+                name="startDate"
               />
             </div>
             <div>
@@ -235,14 +219,15 @@ export default function ReverseDutchAuctionCreation() {
               <Input
                 id="endDate"
                 type="datetime-local"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
+                name="endDate"
               />
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+
+{/* Payment Terms and Licensing */}
+        {/* <Card>
           <CardHeader>
             <CardTitle>6. Payment Terms and Licensing</CardTitle>
           </CardHeader>
@@ -268,13 +253,13 @@ export default function ReverseDutchAuctionCreation() {
               </Select>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
 
         <Card>
-          <CardHeader>
+          {/* <CardHeader>
             <CardTitle>7. Preview and Submit</CardTitle>
-          </CardHeader>
-          <CardContent>
+          </CardHeader> */}
+          {/* <CardContent>
             <div className="space-y-2">
               <p><strong>Auction Name:</strong> {auctionName}</p>
               <p><strong>Selected Products:</strong> {selectedProducts.join(', ')}</p>
@@ -284,7 +269,7 @@ export default function ReverseDutchAuctionCreation() {
               <p><strong>Start Date:</strong> {startDate}</p>
               <p><strong>End Date:</strong> {endDate}</p>
             </div>
-          </CardContent>
+          </CardContent> */}
           <CardFooter>
             <Button type="submit" className="w-full">Create Auction</Button>
           </CardFooter>

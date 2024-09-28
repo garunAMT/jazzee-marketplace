@@ -9,23 +9,62 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
-  directUrl         = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id    String @id @default(uuid())
-  email String @unique
-  name  String?
+  id       String    @id @default(uuid())
+  email    String    @unique
+  name     String?
   products Product[]
+  auctions Auction[] // Auctions initiated by the user
+  bids     Bid[]
 }
+
 model Product {
-  id    String @id @default(uuid())
-  name  String
+  id          String   @id @default(uuid())
+  name        String
   description String
-  price String
-  imageUrl String
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  price       Float
+  imageUrl    String
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+
+  AuctionProduct AuctionProduct[]
+}
+
+model Auction {
+  id            String   @id @default(uuid())
+  initiatorId   String
+  initiator     User     @relation(fields: [initiatorId], references: [id])
+  startingPrice Float     // Starting price of the auction
+  minimumPrice  Float     // Minimum price to reach
+  currentPrice  Float     // Current price (reducing in reverse Dutch auction)
+  endTime       DateTime  // When the auction ends
+  isActive      Boolean   @default(true)
+  bids          Bid[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  AuctionProduct AuctionProduct[] // Relation to AuctionProduct
+}
+
+model Bid {
+  id        String   @id @default(uuid())
+  auctionId String
+  auction   Auction  @relation(fields: [auctionId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  bidAmount Float
+  createdAt DateTime @default(now())
+}
+
+model AuctionProduct {
+  id        String   @id @default(uuid())
+  auctionId String
+  auction   Auction  @relation(fields: [auctionId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
 }
