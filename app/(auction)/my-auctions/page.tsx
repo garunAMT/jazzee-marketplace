@@ -1,5 +1,3 @@
-// page.tsx (Server Component)
-
 import { getAuctionsByInitiatorId } from "@/actions"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 import UserAuctions from "@/components/shared/UserAuctions"

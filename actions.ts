@@ -33,6 +33,12 @@ export async function addProduct(formData: FormData) {
   return redirect("/products");
 }
 
+// Fetching all products
+export async function getAllProducts() {
+  const products = await prisma.product.findMany();
+  return products;
+}
+
 
 // Create a new auction
 export async function createAuction(formData: FormData) {
@@ -41,27 +47,30 @@ export async function createAuction(formData: FormData) {
 
   if (!user || user == null || !user.id) throw new Error("User not found");
 
-  const { auctionName, description, startingPrice, startTime, endTime } = Object.fromEntries(formData.entries());
+  const { auctionName, description, startingPrice, startTime, endTime, product1, product2, product3 } = Object.fromEntries(formData);
 
-  try {
-    const auction = await prisma.auction.create({
-      data: {
-        auctionName: auctionName as string,
-        description: description as string,
-        startingPrice: parseFloat(startingPrice as string),
-        startTime: new Date(startTime as string),
-        endTime: new Date(endTime as string),
-        initiatorId: user.id,
+  // Create auction record
+  const auction = await prisma.auction.create({
+    data: {
+      auctionName: auctionName as string,
+      description: description as string,
+      startingPrice: parseFloat(startingPrice as string),
+      startTime: new Date(startTime as string),
+      endTime: new Date(endTime as string),
+      initiatorId: user.id,
+      AuctionProduct: {
+        create: [
+          { productId: product1 as string },
+          { productId: product2 as string },
+          { productId: product3 as string },
+        ]
       },
-    });
+    },
+  });
 
-    revalidatePath("/auctions");
-  } catch (error) {
-    console.error("Error creating auction:", error);
-    throw error;
-  }
-  return redirect("/auctions");
+  return redirect(`/my-auctions`);
 }
+
 
 // Fetching auctions by initiatorId
 export async function getAuctionsByInitiatorId(initiatorId: string) {
@@ -76,3 +85,5 @@ export async function getAuctionsByInitiatorId(initiatorId: string) {
   });
   return auctions;
 }
+
+

@@ -124,7 +124,7 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
           <TableBody>
             {filteredAuctions.map((auction) => (
               <TableRow key={auction.id}>
-                <TableCell className="font-medium text-red-500">{auction.auctionName}</TableCell>
+                <TableCell className="font-medium ">{auction.auctionName}</TableCell>
                 {/* Format date in the same way on both server and client */}
                 <TableCell>{formatDate(auction.createdAt)}</TableCell>
                 <TableCell>
