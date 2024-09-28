@@ -73,6 +73,24 @@ export async function createAuction(formData: FormData) {
 }
 
 
+// fetch auctions by auctionId also show the products details in the auction
+export async function getAuctionById(auctionId: string) {
+  const auctionData = await prisma.auction.findUnique({
+    where: {
+      id: auctionId,
+    },
+    include: {
+      AuctionProduct: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+  return auctionData;
+}
+
+
 // Fetching auctions by initiatorId
 export async function getAuctionsByInitiatorId(initiatorId: string) {
 
@@ -138,3 +156,27 @@ export async function createBid(formData: FormData) {
   }
 }
 
+
+// Fetching all bids by auctionId, also extract the user details
+export async function getBidsByAuctionId(auctionId: string) {
+  
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user || user == null || !user.id) throw new Error("User not found");
+
+  try {
+    const bids = await prisma.bid.findMany({
+      where: {
+        auctionId: auctionId,
+      },
+      include: {
+        user: true,
+      },
+    });
+    return bids;
+  } catch (error) {
+    console.error("Error fetching bids:", error);
+    throw error;
+  }
+}

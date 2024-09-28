@@ -116,7 +116,7 @@ export default function AuctionCard({ auction, onSubmitQuote }: { auction: Aucti
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit">Submit Quote</Button>
+                <Button type="submit" onClick={() => setIsDialogOpen(false)}>Submit Quote</Button>
               </DialogFooter>
             </form>
           </DialogContent>
