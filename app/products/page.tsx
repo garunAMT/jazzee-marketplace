@@ -2,13 +2,11 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, Search, Star } from "lucide-react";
+import { Search, Star } from "lucide-react";
 import Image from "next/image";
 import prisma from "@/lib/db";
 import Link from "next/link";
@@ -65,6 +63,7 @@ export default async function Component() {
           </SelectContent>
         </Select> */}
       </div>
+      <p className="text-base mb-4">Get the amazing catalogue of products from the best vendors in the market.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {products.map((product, index) => (
           <Card key={index} className="flex flex-col justify-between">

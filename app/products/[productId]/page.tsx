@@ -1,174 +1,178 @@
-// 'use client'
-// import React, { useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Star, ChevronRight, ChevronDown } from 'lucide-react'
+import Image from "next/image"
+import { Star, Check } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { getProductById } from '@/actions'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { getProductById } from "@/actions"
+import Link from "next/link"
 
-// Mock data for the product
-const product = {
-  name: "SuperCRM",
-  tagline: "Revolutionize your customer relationships",
-  image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D",
-  rating: 4.5,
-  startingPrice: "$19/month",
-  vendor: {
-    name: "TechInnovators Inc.",
-    logo: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D",
-    bio: "Leading the way in SaaS solutions"
-  },
-  categories: ["CRM", "Marketing", "Sales"],
-  overview: "SuperCRM is a comprehensive customer relationship management tool...",
-  pricing: "Our flexible pricing plans cater to businesses of all sizes...",
-  reviews: "Users love SuperCRM for its intuitive interface and powerful features...",
-  technicalDetails: "SuperCRM integrates seamlessly with popular platforms..."
+// This function would typically fetch data from an API or database
+async function getSaasProductDetails() {
+  return {
+    name: "TaskMaster Pro",
+    tagline: "Streamline Your Workflow, Amplify Your Productivity",
+    description: "TaskMaster Pro is the ultimate project management solution for teams of all sizes. With intuitive task tracking, real-time collaboration, and powerful analytics, you'll boost your team's efficiency and deliver projects on time, every time.",
+    rating: 4.8,
+    reviews: 1024,
+    features: [
+      "Intuitive Kanban boards",
+      "Real-time collaboration",
+      "Advanced task tracking",
+      "Customizable workflows",
+      "Detailed analytics and reporting",
+      "Integrations with popular tools"
+    ],
+    pricingPlans: [
+      {
+        name: "Starter",
+        price: 9.99,
+        billing: "per user/month",
+        features: [
+          "Up to 5 team members",
+          "5 projects",
+          "Basic analytics",
+          "24/7 support"
+        ]
+      },
+      {
+        name: "Pro",
+        price: 24.99,
+        billing: "per user/month",
+        features: [
+          "Up to 20 team members",
+          "Unlimited projects",
+          "Advanced analytics",
+          "Priority support",
+          "Custom integrations"
+        ]
+      },
+      {
+        name: "Enterprise",
+        price: 49.99,
+        billing: "per user/month",
+        features: [
+          "Unlimited team members",
+          "Unlimited projects",
+          "Advanced security features",
+          "Dedicated account manager",
+          "On-premise deployment option"
+        ]
+      }
+    ],
+    testimonials: [
+      {
+        name: "Sarah Johnson",
+        company: "Tech Innovators Inc.",
+        comment: "TaskMaster Pro has revolutionized how we manage projects. It's intuitive, powerful, and has significantly improved our team's productivity."
+      },
+      {
+        name: "Michael Chen",
+        company: "Global Solutions Ltd.",
+        comment: "The analytics feature in TaskMaster Pro has given us invaluable insights into our workflow. It's been a game-changer for our project planning."
+      }
+    ]
+  }
 }
 
-// Mock data for related products
-const relatedProducts = [
-  { name: "MarketPro", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D", description: "Advanced marketing automation", price: "$29/month" },
-  { name: "SalesForce", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D", description: "AI-powered sales insights", price: "$39/month" },
-  { name: "SupportHub", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D", description: "Customer support made easy", price: "$24/month" }
-]
+export default async function SaasProductPage({ params }: { params: { productId: string } }) {
 
-export default async function ProductPage( { params }: { params: { productId: string } } ) {
-
-  // Fetching the product by productId
-  const product = await getProductById(params.productId)
-
-  // State for the active tab
-  // const [activeTab, setActiveTab] = useState("overview")
+  const product = await getSaasProductDetails()
+  const realProduct = await getProductById(params.productId)
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header Section */}
-      <header className="text-center mb-8">
-        <nav className="text-sm mb-2 text-muted-foreground">
-          <Link href="/">Home</Link> <ChevronRight className="inline-block w-4 h-4" />
-          <Link href="/saas">SaaS Products</Link> <ChevronRight className="inline-block w-4 h-4" />
-          <Link href="/saas/crm">CRM</Link> <ChevronRight className="inline-block w-4 h-4" />
-          <span>{product?.name}</span>
-        </nav>
-        <h1 className="text-4xl font-bold mb-2">{product?.name}</h1>
-        <p className="text-xl text-muted-foreground">{product?.description}</p>
-      </header>
-
-      {/* Main Content Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column (Product Details) */}
-        <div className="lg:col-span-8">
-          <Image
-            src={product?.imageUrl || ''}
-            alt={product?.name || ''}
-            width={800}
-            height={400}
-            className="w-40 h-auto rounded-lg mb-8"
-          />
-
-          {/* Tabbed content for desktop and tablet */}
-          {/* <Tabs defaultValue="overview" className="hidden md:block">
-            <TabsList>
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="pricing">Pricing</TabsTrigger>
-              <TabsTrigger value="reviews">Reviews</TabsTrigger>
-              <TabsTrigger value="technical">Technical Details</TabsTrigger>
-            </TabsList>
-            <TabsContent value="overview">{product.overview}</TabsContent>
-            <TabsContent value="pricing">{product.pricing}</TabsContent>
-            <TabsContent value="reviews">{product.reviews}</TabsContent>
-            <TabsContent value="technical">{product.technicalDetails}</TabsContent>
-          </Tabs> */}
-
-          {/* Accordion for mobile */}
-          {/* <Accordion type="single" collapsible className="md:hidden">
-            <AccordionItem value="overview">
-              <AccordionTrigger>Overview</AccordionTrigger>
-              <AccordionContent>{product.overview}</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="pricing">
-              <AccordionTrigger>Pricing</AccordionTrigger>
-              <AccordionContent>{product.pricing}</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="reviews">
-              <AccordionTrigger>Reviews</AccordionTrigger>
-              <AccordionContent>{product.reviews}</AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="technical">
-              <AccordionTrigger>Technical Details</AccordionTrigger>
-              <AccordionContent>{product.technicalDetails}</AccordionContent>
-            </AccordionItem>
-          </Accordion> */}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold mb-4">{realProduct?.name}</h1>
+        <p className="text-xl text-muted-foreground mb-6">{realProduct?.description}</p>
+        <div className="flex justify-center items-center mb-6">
+          <div className="flex items-center">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`} />
+            ))}
+          </div>
+          <span className="ml-2 text-sm text-muted-foreground">({product.reviews} reviews)</span>
         </div>
-
-        {/* Right Column (Product Summary) */}
-        <div className="lg:col-span-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Product Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {/* <div className="flex items-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
-                ))}
-                <span className="ml-2">{product.rating}/5</span>
-              </div> */}
-              <p className="text-2xl font-bold mb-4">$ {product?.price}</p>
-              <Button className="w-full mb-4">Start Free Trial</Button>
-              <div className="flex items-center mb-4">
-                <Image
-                  src={'https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png'}
-                  alt={product?.owner.name || ''}
-                  width={40}
-                  height={40}
-                  className="rounded-full mr-2"
-                />
-                <div>
-                  <h3 className="font-semibold">{product?.owner.name}</h3>
-                  <p className="text-sm text-muted-foreground">{product?.owner.email}</p>
-                </div>
-              </div>
-              {/* <div className="flex flex-wrap gap-2">
-                {product.categories.map((category) => (
-                  <span key={category} className="bg-muted text-muted-foreground px-2 py-1 rounded text-sm">
-                    {category}
-                  </span>
-                ))}
-              </div> */}
-            </CardContent>
-          </Card>
+        <div className="flex justify-center">
+          <Image
+            src="/placeholder.svg"
+            alt={product.name}
+            width={600}
+            height={300}
+            className="rounded-lg shadow-lg"
+          />
         </div>
       </div>
 
-      {/* Additional Information Section */}
-      <section className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">Related Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {relatedProducts.map((product) => (
-            <Card key={product.name}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+        <div>
+          <h2 className="text-2xl font-semibold mb-4">About {product.name}</h2>
+          <p className="text-muted-foreground mb-6">{product.description}</p>
+          <h3 className="text-xl font-semibold mb-2">Key Features:</h3>
+          <ul className="space-y-2">
+            {product.features.map((feature, index) => (
+              <li key={index} className="flex items-center">
+                <Check className="w-5 h-5 text-green-500 mr-2" />
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2 className="text-2xl font-semibold mb-4">What Our Customers Say</h2>
+          {product.testimonials.map((testimonial, index) => (
+            <Card key={index} className="mb-4">
               <CardHeader>
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={300}
-                  height={150}
-                  className="w-full h-auto rounded-lg mb-2"
-                />
-                <CardTitle>{product.name}</CardTitle>
+                <CardTitle>{testimonial.name}</CardTitle>
+                <CardDescription>{testimonial.company}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="mb-2">{product.description}</p>
-                <p className="font-bold">{product.price}</p>
+                <p className="italic">"{testimonial.comment}"</p>
               </CardContent>
             </Card>
           ))}
         </div>
-      </section>
+      </div>
+
+      <Separator className="my-12" />
+
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
+        <p className="text-xl text-muted-foreground">Select the perfect plan for your team's needs</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {product.pricingPlans.map((plan, index) => (
+          <Card key={index} className="flex flex-col">
+            <CardHeader>
+              <CardTitle>{plan.name}</CardTitle>
+              <CardDescription>
+                <span className="text-3xl font-bold">${plan.price}</span>
+                <span className="text-muted-foreground"> {plan.billing}</span>
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex-grow">
+              <ul className="space-y-2">
+                {plan.features.map((feature, featureIndex) => (
+                  <li key={featureIndex} className="flex items-center">
+                    <Check className="w-5 h-5 text-green-500 mr-2" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <Button className="w-full">Choose {plan.name}</Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+
+      <div className="text-center">
+        <h2 className="text-2xl font-semibold mb-4">Ready to boost your productivity?</h2>
+        <Button size="lg"><Link href={`/create-auction`}>Add us to an Auction</Link></Button>
+      </div>
     </div>
   )
 }
