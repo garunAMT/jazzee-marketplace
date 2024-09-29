@@ -27,8 +27,13 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Star, Info } from "lucide-react";
 import { getAuctionById, getBidsByAuctionId } from "@/actions";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 export default async function AuctionResults({ params }: { params: { id: string } }) {
+
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
   // fetching auction data by id
   const auctionData = await getAuctionById(params.id);
 
@@ -81,7 +86,7 @@ export default async function AuctionResults({ params }: { params: { id: string 
         <Card>
           <CardHeader>
             <CardTitle>Auction Overview</CardTitle>
-            <CardDescription>Auction ID: {auctionData?.id}</CardDescription>
+            <CardDescription>Auction Name: {auctionData?.auctionName}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className="mb-2">
@@ -115,6 +120,7 @@ export default async function AuctionResults({ params }: { params: { id: string 
         <Card>
           <CardHeader>
             <CardTitle>Vendor Bids</CardTitle>
+            <CardDescription>Top 3 bids from vendors are shown here</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
@@ -137,7 +143,7 @@ export default async function AuctionResults({ params }: { params: { id: string 
                       <TableCell className="font-medium">
                         <div className="flex items-center space-x-2">
                           <img
-                            src={"https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png"}
+                            src={user?.picture ?? ""}
                             alt={bid.user.name || "User"}
                             className="w-6 h-6 rounded-full"
                           />

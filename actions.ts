@@ -125,6 +125,9 @@ export async function getAuctionsByInitiatorId(initiatorId: string) {
     include: {
       AuctionProduct: true,
     },
+    orderBy: {
+      createdAt: 'desc', // Sort by date created in descending order
+    },
   });
   return auctions;
 }
@@ -132,7 +135,6 @@ export async function getAuctionsByInitiatorId(initiatorId: string) {
 
 // Fetching auctions by "owner of product"
 // here, we are basically showig the auction only to the selected product's owner, so that only he can take part in that bidding
-// the auctions details should also mention the products details, so that the owner can know what he is bidding for
 export async function getAuctionsByProductOwnerId(ownerId: string) {
   const auctions = await prisma.auction.findMany({
     where: {
@@ -150,6 +152,9 @@ export async function getAuctionsByProductOwnerId(ownerId: string) {
           product: true,
         },
       },
+    },
+    orderBy: {
+      createdAt: 'desc', // Sort by date created in descending order
     },
   });
   return auctions;
@@ -181,7 +186,7 @@ export async function createBid(formData: FormData) {
 }
 
 
-// Fetching all bids by auctionId, also extract the user details
+// Fetching all bids by auctionId, extracting the user details
 export async function getBidsByAuctionId(auctionId: string) {
   
   const { getUser } = getKindeServerSession();
@@ -196,6 +201,9 @@ export async function getBidsByAuctionId(auctionId: string) {
       },
       include: {
         user: true,
+      },
+      orderBy: {
+        bidAmount: 'asc', // Sort bids from lowest to highest
       },
     });
     return bids;

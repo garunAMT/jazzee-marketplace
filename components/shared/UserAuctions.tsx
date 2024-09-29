@@ -61,6 +61,7 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
     }
   };
 
+  // Filter the auctions based on the status and search query
   const filteredAuctions = auctions.filter((auction) => {
     const auctionStatus = getStatus(auction);
     const matchesFilter = filter === "All" || auctionStatus === filter;
@@ -70,6 +71,7 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
     return matchesFilter && matchesSearch;
   });
 
+  // Define the color of the badge based on the status
   const getStatusColor = (status: string): string => {
     switch (status) {
       case "Opening Soon":
