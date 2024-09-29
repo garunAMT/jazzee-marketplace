@@ -28,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Info } from "lucide-react";
 import { getAuctionById, getBidsByAuctionId } from "@/actions";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import AuctionResultDeclareCard from "@/components/shared/AuctionResultDeclareCard";
 
 export default async function AuctionResults({ params }: { params: { id: string } }) {
 
@@ -143,7 +144,7 @@ export default async function AuctionResults({ params }: { params: { id: string 
                       <TableCell className="font-medium">
                         <div className="flex items-center space-x-2">
                           <img
-                            src={user?.picture ?? ""}
+                            src={"https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png"}
                             alt={bid.user.name || "User"}
                             className="w-6 h-6 rounded-full"
                           />
@@ -202,7 +203,11 @@ export default async function AuctionResults({ params }: { params: { id: string 
             </Table>
           </CardContent>
         </Card>
+
       </div>
+      {auctionStatus.status === "Closed" && (
+        <AuctionResultDeclareCard auctionData={auctionData} />
+      )}
     </div>
   );
 }

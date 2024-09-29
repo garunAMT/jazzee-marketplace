@@ -99,6 +99,7 @@ export async function createAuction(formData: FormData) {
 
 // fetch auctions by auctionId also show the products details in the auction
 export async function getAuctionById(auctionId: string) {
+  await updateEndedAuctions();
   const auctionData = await prisma.auction.findUnique({
     where: {
       id: auctionId,
@@ -212,3 +213,42 @@ export async function getBidsByAuctionId(auctionId: string) {
     throw error;
   }
 }
+
+
+// updating the auction status to "ended" and declaring the winner
+// Check for ended auctions and update winner details
+export async function updateEndedAuctions() {
+  const endedAuctions = await prisma.auction.findMany({
+    where: {
+      endTime: {
+        lte: new Date(), // Auctions with endTime <= current date
+      },
+      winnerId: null, // Only update auctions that haven't been updated already
+    },
+    include: {
+      bids: {
+        orderBy: {
+          bidAmount: 'asc', // Sort bids from highest to lowest
+        },
+        take: 1, // Get the highest bid
+      },
+    },
+  });
+
+  for (const auction of endedAuctions) {
+    if (auction.bids.length > 0) {
+      const winningBid = auction.bids[0];
+      await prisma.auction.update({
+        where: {
+          id: auction.id,
+        },
+        data: {
+          winnerId: winningBid.userId,
+          winningBidId: winningBid.id,
+          winningPrice: winningBid.bidAmount,
+        },
+      });
+    }
+  }
+}
+

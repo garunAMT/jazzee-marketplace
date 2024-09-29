@@ -34,3 +34,20 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+<!-- Deatils about the different pages of website -->
+
+## Website Pages
+
+- Home: Landing page showcasing featured auctions and site overview.
+- Products: Displays all available products for auction.
+- Add Product: Form for vendors to add new products to the system.
+- Create Auction: Interface for initiating new auctions with selected products.
+- My Auctions: Dashboard for users to view and manage their created auctions.
+- Auction Details: Detailed view of a specific auction, including bidding functionality.
+- Vendor Dashboard: Overview for vendors to manage their products and view relevant auctions.
+- Auction Results: Page displaying the outcome of completed auctions.
+- User Profile: Personal information and activity history for registered users.
+
+
