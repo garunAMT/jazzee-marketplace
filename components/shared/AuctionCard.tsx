@@ -1,56 +1,102 @@
-// app/vendor/dashboard/AuctionCard.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { DollarSign, Package } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { createBid } from '@/actions';
+import { useState } from "react";
+import { DollarSign, Package } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
+import { createBid } from "@/actions";
 
 interface Auction {
-    id: string;
-    auctionName: string;
-    description: string;
-    startingPrice: number;
-    startTime: Date;
-    endTime: Date;
-    initiatorId: string;
-    AuctionProduct: {
-      product: {
-        id: string;
-        name: string;
-        description: string;
-        price: number;
-        imageUrl: string;
-        ownerId: string;
-      };
-    }[];
-  }
+  id: string;
+  auctionName: string;
+  description: string;
+  startingPrice: number;
+  startTime: Date;
+  endTime: Date;
+  initiatorId: string;
+  AuctionProduct: {
+    product: {
+      id: string;
+      name: string;
+      description: string;
+      price: number;
+      imageUrl: string;
+      ownerId: string;
+    };
+  }[];
+}
 
-export default function AuctionCard({ auction, onSubmitQuote }: { auction: Auction; onSubmitQuote: (id: number, quote: number, comment: string) => void }) {
+export default function AuctionCard({
+  auction,
+  onSubmitQuote,
+}: {
+  auction: Auction;
+  onSubmitQuote: (id: number, quote: number, comment: string) => void;
+}) {
+
+  // dialog open state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-// define status based on startTime and endTime
-// const status = auction.startTime > new Date() ? 'Live' : auction.endTime < new Date() ? 'Closed' : 'Closing Soon';
-
+  // status color
   const statusColor = {
-    Open: 'bg-green-100 text-green-800',
-    'Closing Soon': 'bg-yellow-100 text-yellow-800',
-    Closed: 'bg-red-100 text-red-800',
+    "Opening Soon": "bg-blue-100 text-blue-800",
+    Open: "bg-green-100 text-green-800",
+    "Closing Soon": "bg-yellow-100 text-yellow-800",
+    Closed: "bg-red-100 text-red-800",
   };
 
   return (
     <Card className="w-full">
       <CardHeader className="relative pb-2">
         <CardTitle className="text-lg">{auction.auctionName}</CardTitle>
-        {/* <Badge className={`absolute top-2 right-2 ${statusColor[auction.status as keyof typeof statusColor]}`}>
-          {auction.status}
-        </Badge> */}
+
+        {/* ----------------------STATUS BADGE LOGIC---------------------- */}
+        {(() => {
+          const now = new Date();
+          let status = "Opening Soon";
+          let statusClass = statusColor["Opening Soon"];
+
+          if (now < auction.startTime) {
+            status = "Opening Soon";
+            statusClass = statusColor["Opening Soon"];
+          } else if (now > auction.endTime) {
+            status = "Closed";
+            statusClass = statusColor.Closed;
+          } else if (
+            now > new Date(auction.endTime.getTime() - 24 * 60 * 60 * 1000)
+          ) {
+            status = "Closing Soon";
+            statusClass = statusColor["Closing Soon"];
+          } else {
+            status = "Open";
+            statusClass = statusColor.Open;
+          }
+
+          return (
+            <Badge className={`absolute top-2 right-2 ${statusClass}`}>
+              {status}
+            </Badge>
+          );
+        })()}
       </CardHeader>
       <CardContent className="pb-2">
         <div className="grid gap-1 text-sm">
@@ -70,13 +116,16 @@ export default function AuctionCard({ auction, onSubmitQuote }: { auction: Aucti
         </div>
       </CardContent>
 
-
-
-{/* ------------------FORM FOR SUBMITTING BID------------------ */}
+      {/* ------------------FORM FOR SUBMITTING BID------------------ */}
       <CardFooter className="flex justify-between pt-2">
+        <Button variant="outline">
+          <Link href={`/auction-results/${auction.id}`}>View Auction</Link>
+        </Button>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button size="sm">Submit Quote</Button>
+            <Button size="sm" disabled={new Date() < auction.startTime || new Date() > auction.endTime}>
+              Submit Quote
+            </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -85,10 +134,10 @@ export default function AuctionCard({ auction, onSubmitQuote }: { auction: Aucti
             <form action={createBid}>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                <Input
+                  <Input
                     id="auctionId"
                     type="hidden"
-                    name='auctionId'
+                    name="auctionId"
                     value={auction.id}
                     className="col-span-3"
                     required
@@ -99,7 +148,7 @@ export default function AuctionCard({ auction, onSubmitQuote }: { auction: Aucti
                   <Input
                     id="bidAmount"
                     type="number"
-                    name='bidAmount'
+                    name="bidAmount"
                     className="col-span-3"
                     required
                   />
@@ -110,13 +159,15 @@ export default function AuctionCard({ auction, onSubmitQuote }: { auction: Aucti
                   </Label>
                   <Textarea
                     id="comment"
-                    name='comment'
+                    name="comment"
                     className="col-span-3"
                   />
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" onClick={() => setIsDialogOpen(false)}>Submit Quote</Button>
+                <Button type="submit" onClick={() => setIsDialogOpen(false)}>
+                  Submit Quote
+                </Button>
               </DialogFooter>
             </form>
           </DialogContent>

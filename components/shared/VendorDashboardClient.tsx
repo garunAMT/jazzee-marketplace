@@ -40,10 +40,20 @@ export default function VendorDashboardClient({ auctions }: { auctions: Auction[
     }));
   };
 
-  const filteredAuctions = auctions.filter((auction) =>
-    auction.auctionName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (statusFilter === 'All')
-  );
+  const filteredAuctions = auctions.filter((auction) => {
+    const matchesSearch = auction.auctionName.toLowerCase().includes(searchTerm.toLowerCase());
+    const now = new Date();
+    let status = 'Open';
+    if (now < auction.startTime) {
+      status = 'Opening Soon';
+    } else if (now > auction.endTime) {
+      status = 'Closed';
+    } else if (now > new Date(auction.endTime.getTime() - 24 * 60 * 60 * 1000)) {
+      status = 'Closing Soon';
+    }
+    const matchesStatus = statusFilter === 'All' || status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -77,7 +87,8 @@ export default function VendorDashboardClient({ auctions }: { auctions: Auction[
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="All">All Statuses</SelectItem>
+              <SelectItem value="All">All Auctions</SelectItem>
+              <SelectItem value="Opening Soon">Opening Soon</SelectItem>
               <SelectItem value="Open">Open</SelectItem>
               <SelectItem value="Closing Soon">Closing Soon</SelectItem>
               <SelectItem value="Closed">Closed</SelectItem>

@@ -24,92 +24,57 @@ import {
 } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-// import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import { Star, Info } from "lucide-react";
 import { getAuctionById, getBidsByAuctionId } from "@/actions";
 
-// Mock data for the example
-// const auctionData = {
-//   id: "12345",
-//   startTime: "2023-07-01 10:00 AM",
-//   endTime: "2023-07-02 10:00 AM",
-//   buyerBudget: 5000,
-//   selectedProducts: [
-//     {
-//       name: "Product A",
-//       logo: "https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png",
-//       description: "Description of Product A",
-//     },
-//     {
-//       name: "Product B",
-//       logo: "https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png",
-//       description: "Description of Product B",
-//     },
-//     {
-//       name: "Product C",
-//       logo: "https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png",
-//       description: "Description of Product C",
-//     },
-//   ],
-//   vendorBids: [
-//     {
-//       name: "Vendor 1",
-//       logo: "https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png",
-//       amount: 1200,
-//       time: "2 mins ago",
-//       details: {
-//         license: "Premium",
-//         features: ["Feature 1", "Feature 2"],
-//         support: "24/7",
-//         perks: "Free training",
-//       },
-//       rating: 4.5,
-//     },
-//     {
-//       name: "Vendor 2",
-//       logo: "https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png",
-//       amount: 1500,
-//       time: "10 mins ago",
-//       details: {
-//         license: "Enterprise",
-//         features: ["Feature 1", "Feature 2", "Feature 3"],
-//         support: "Dedicated",
-//         perks: "30-day money-back guarantee",
-//       },
-//       rating: 4.8,
-//     },
-//     {
-//       name: "Vendor 3",
-//       logo: "https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png",
-//       amount: 1100,
-//       time: "15 mins ago",
-//       details: {
-//         license: "Standard",
-//         features: ["Feature 1"],
-//         support: "Email",
-//         perks: "None",
-//       },
-//       rating: 4.2,
-//     },
-//   ],
-// };
-
 export default async function AuctionResults({ params }: { params: { id: string } }) {
-  // const [selectedVendor, setSelectedVendor] = useState("");
-
   // fetching auction data by id
   const auctionData = await getAuctionById(params.id);
 
   // fetching bids by auctionId
   const vendorBids = await getBidsByAuctionId(params.id);
 
+  // Function to get auction status and remaining time
+  const getAuctionStatus = (endTime: Date) => {
+    const now = new Date();
+    const timeRemaining = endTime.getTime() - now.getTime();
+    
+    if (timeRemaining <= 0) {
+      return { status: "Closed", message: "This auction has been completed" };
+    } else if (timeRemaining <= 24 * 60 * 60 * 1000) { // Less than 24 hours
+      const hoursRemaining = Math.ceil(timeRemaining / (1000 * 60 * 60));
+      return { status: "Closing Soon", message: `Closing in ${hoursRemaining} hour${hoursRemaining > 1 ? 's' : ''}` };
+    } else {
+      return { status: "Open", message: "Auction is open. Bid now!" };
+    }
+  };
+
+  const auctionStatus = auctionData ? getAuctionStatus(auctionData.endTime) : { status: "Unknown", message: "Unable to determine auction status" };
+
+  // Status color mapping
+  const statusColor = {
+    Open: "bg-green-100 text-green-800",
+    "Closing Soon": "bg-yellow-100 text-yellow-800",
+    Closed: "bg-red-100 text-red-800",
+    Unknown: "bg-gray-100 text-gray-800"
+  };
+
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-2">Auction Results</h1>
-      <p className="text-gray-600 mb-6">
-        Here are the bids from your selected vendors. Choose the best offer for
-        your needs.
-      </p>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Auction Results</h1>
+          <p className="text-gray-600">
+            Here are the bids from your selected vendors. Choose the best offer for
+            your needs.
+          </p>
+        </div>
+        <Badge className={`${statusColor[auctionStatus.status as keyof typeof statusColor]} text-sm px-3 py-1`}>
+          {auctionStatus.status}
+        </Badge>
+      </div>
+      <p className="text-lg font-semibold mb-6">{auctionStatus.message}</p>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Left Column: Auction Overview */}
@@ -232,36 +197,6 @@ export default async function AuctionResults({ params }: { params: { id: string 
           </CardContent>
         </Card>
       </div>
-
-      {/* Final Selection */}
-      {/* <Card className="mt-6">
-        <CardHeader>
-          <CardTitle>Final Selection</CardTitle>
-          <CardDescription>
-            Select an offer to proceed with purchase
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <RadioGroup
-            value={selectedVendor}
-            onValueChange={setSelectedVendor}
-            className="space-y-2"
-          >
-            {auctionData.vendorBids.map((bid, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <RadioGroupItem value={bid.name} id={`vendor-${index}`} />
-                <Label htmlFor={`vendor-${index}`}>
-                  {bid.name} - ${bid.amount.toLocaleString()}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
-          <div className="mt-4 flex justify-between">
-            <Button disabled={!selectedVendor}>Select Vendor</Button>
-            <Button variant="destructive">Cancel Auction</Button>
-          </div>
-        </CardContent>
-      </Card> */}
     </div>
   );
 }

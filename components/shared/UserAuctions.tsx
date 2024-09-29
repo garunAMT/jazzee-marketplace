@@ -47,21 +47,22 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
     }).format(new Date(date));
   };
 
-  // Define status of the auction by checking the endTime and startTime
-  const status = (auction: Auction) => {
-    const endTime = new Date(auction.endTime);
-    const currentTime = new Date();
-    if (currentTime > endTime) {
-      return "Completed";
-    } else if (currentTime < endTime) {
-      return "Running";
+  // Define status of the auction by checking the startTime and endTime
+  const getStatus = (auction: Auction) => {
+    const now = new Date();
+    if (now < auction.startTime) {
+      return "Opening Soon";
+    } else if (now > auction.endTime) {
+      return "Closed";
+    } else if (now > new Date(auction.endTime.getTime() - 24 * 60 * 60 * 1000)) {
+      return "Closing Soon";
     } else {
-      return "Live";
+      return "Open";
     }
   };
 
   const filteredAuctions = auctions.filter((auction) => {
-    const auctionStatus = status(auction);
+    const auctionStatus = getStatus(auction);
     const matchesFilter = filter === "All" || auctionStatus === filter;
     const matchesSearch = auction.auctionName
       .toLowerCase()
@@ -71,16 +72,16 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
 
   const getStatusColor = (status: string): string => {
     switch (status) {
-      case "Live":
-        return "bg-green-500";
-      case "Running":
-        return "bg-orange-500";
-      case "Completed":
-        return "bg-gray-500";
-      case "Cancelled":
-        return "bg-red-500";
+      case "Opening Soon":
+        return "bg-blue-100 text-blue-800";
+      case "Open":
+        return "bg-green-100 text-green-800";
+      case "Closing Soon":
+        return "bg-yellow-100 text-yellow-800";
+      case "Closed":
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-blue-500";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -100,11 +101,11 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="All">All</SelectItem>
-            <SelectItem value="Live">Live</SelectItem>
-            <SelectItem value="Running">Running</SelectItem>
-            <SelectItem value="Completed">Completed</SelectItem>
-            <SelectItem value="Cancelled">Cancelled</SelectItem>
+            <SelectItem value="All">All Auctions</SelectItem>
+            <SelectItem value="Opening Soon">Opening Soon</SelectItem>
+            <SelectItem value="Open">Open</SelectItem>
+            <SelectItem value="Closing Soon">Closing Soon</SelectItem>
+            <SelectItem value="Closed">Closed</SelectItem>
           </SelectContent>
         </Select>
         <div className="relative w-full sm:w-auto">
@@ -142,8 +143,8 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
                 {/* Format date in the same way on both server and client */}
                 <TableCell>{formatDate(auction.createdAt)}</TableCell>
                 <TableCell>
-                  <Badge className={getStatusColor(status(auction))}>
-                    {status(auction)}
+                  <Badge className={getStatusColor(getStatus(auction))}>
+                    {getStatus(auction)}
                   </Badge>
                 </TableCell>
                 <TableCell>
@@ -168,8 +169,8 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
               <p className="text-sm text-gray-500 mb-2">
                 {formatDate(auction.createdAt)}
               </p>
-              <Badge className={getStatusColor(status(auction))}>
-                {status(auction)}
+              <Badge className={getStatusColor(getStatus(auction))}>
+                {getStatus(auction)}
               </Badge>
             </CardContent>
             <CardFooter>
