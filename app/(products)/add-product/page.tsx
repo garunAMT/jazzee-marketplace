@@ -2,17 +2,17 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ImagePlus } from "lucide-react"
 import { addProduct } from '@/actions'
 
 // define types for the form data
-type ProductFormData = {
-  name: string
-  image: string
-  description: string
-  price: string
-}
+// type ProductFormData = {
+//   name: string
+//   image: string
+//   description: string
+//   price: string
+// }
 
 export default function AddProductPage() {
 

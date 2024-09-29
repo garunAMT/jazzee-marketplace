@@ -25,13 +25,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Info } from "lucide-react";
 import { getAuctionById, getBidsByAuctionId } from "@/actions";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import AuctionResultDeclareCard from "@/components/shared/AuctionResultDeclareCard";
 
 export default async function AuctionResults({ params }: { params: { id: string } }) {
 
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
 
   // fetching auction data by id
   const auctionData = await getAuctionById(params.id);

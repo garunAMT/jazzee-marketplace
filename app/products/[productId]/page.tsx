@@ -127,7 +127,7 @@ export default async function SaasProductPage({ params }: { params: { productId:
                 <CardDescription>{testimonial.company}</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="italic">"{testimonial.comment}"</p>
+                <p className="italic">&quot;{testimonial.comment}&quot;</p>
               </CardContent>
             </Card>
           ))}
@@ -138,7 +138,7 @@ export default async function SaasProductPage({ params }: { params: { productId:
 
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
-        <p className="text-xl text-muted-foreground">Select the perfect plan for your team's needs</p>
+        <p className="text-xl text-muted-foreground">Select the perfect plan for your team&apos;s needs</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">

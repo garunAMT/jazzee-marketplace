@@ -58,7 +58,7 @@ export default async function AuctionResultDeclareCard({
           {isWinner && (
             <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
               <p className="text-sm text-green-700 font-medium">
-                Congratulations! You've won the bid for this auction.
+                Congratulations! You&apos;ve won the bid for this auction.
               </p>
             </div>
           )}

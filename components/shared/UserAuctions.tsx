@@ -92,7 +92,7 @@ export default function UserAuctions({ auctions }: UserAuctionsProps) {
       <header className="mb-8">
         <h1 className="text-3xl font-bold mb-2">My Auctions</h1>
         <p className="text-gray-600">
-          View all the auctions you've created. Track their status and check
+          View all the auctions you&apos;ve created. Track their status and check
           details at a glance.
         </p>
       </header>
