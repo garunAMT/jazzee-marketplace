@@ -1,5 +1,5 @@
-'use client'
-import React, { useState } from 'react'
+// 'use client'
+// import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star, ChevronRight, ChevronDown } from 'lucide-react'
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { getProductById } from '@/actions'
 
 // Mock data for the product
 const product = {
@@ -35,8 +36,13 @@ const relatedProducts = [
   { name: "SupportHub", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8cHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D", description: "Customer support made easy", price: "$24/month" }
 ]
 
-export default function ProductPage() {
-  const [activeTab, setActiveTab] = useState("overview")
+export default async function ProductPage( { params }: { params: { productId: string } } ) {
+
+  // Fetching the product by productId
+  const product = await getProductById(params.productId)
+
+  // State for the active tab
+  // const [activeTab, setActiveTab] = useState("overview")
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -46,10 +52,10 @@ export default function ProductPage() {
           <Link href="/">Home</Link> <ChevronRight className="inline-block w-4 h-4" />
           <Link href="/saas">SaaS Products</Link> <ChevronRight className="inline-block w-4 h-4" />
           <Link href="/saas/crm">CRM</Link> <ChevronRight className="inline-block w-4 h-4" />
-          <span>{product.name}</span>
+          <span>{product?.name}</span>
         </nav>
-        <h1 className="text-4xl font-bold mb-2">{product.name}</h1>
-        <p className="text-xl text-muted-foreground">{product.tagline}</p>
+        <h1 className="text-4xl font-bold mb-2">{product?.name}</h1>
+        <p className="text-xl text-muted-foreground">{product?.description}</p>
       </header>
 
       {/* Main Content Section */}
@@ -57,15 +63,15 @@ export default function ProductPage() {
         {/* Left Column (Product Details) */}
         <div className="lg:col-span-8">
           <Image
-            src={product.image}
-            alt={product.name}
+            src={product?.imageUrl || ''}
+            alt={product?.name || ''}
             width={800}
             height={400}
-            className="w-full h-auto rounded-lg mb-8"
+            className="w-40 h-auto rounded-lg mb-8"
           />
 
           {/* Tabbed content for desktop and tablet */}
-          <Tabs defaultValue="overview" className="hidden md:block">
+          {/* <Tabs defaultValue="overview" className="hidden md:block">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="pricing">Pricing</TabsTrigger>
@@ -76,10 +82,10 @@ export default function ProductPage() {
             <TabsContent value="pricing">{product.pricing}</TabsContent>
             <TabsContent value="reviews">{product.reviews}</TabsContent>
             <TabsContent value="technical">{product.technicalDetails}</TabsContent>
-          </Tabs>
+          </Tabs> */}
 
           {/* Accordion for mobile */}
-          <Accordion type="single" collapsible className="md:hidden">
+          {/* <Accordion type="single" collapsible className="md:hidden">
             <AccordionItem value="overview">
               <AccordionTrigger>Overview</AccordionTrigger>
               <AccordionContent>{product.overview}</AccordionContent>
@@ -96,7 +102,7 @@ export default function ProductPage() {
               <AccordionTrigger>Technical Details</AccordionTrigger>
               <AccordionContent>{product.technicalDetails}</AccordionContent>
             </AccordionItem>
-          </Accordion>
+          </Accordion> */}
         </div>
 
         {/* Right Column (Product Summary) */}
@@ -106,34 +112,34 @@ export default function ProductPage() {
               <CardTitle>Product Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center mb-4">
+              {/* <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
                 ))}
                 <span className="ml-2">{product.rating}/5</span>
-              </div>
-              <p className="text-2xl font-bold mb-4">{product.startingPrice}</p>
+              </div> */}
+              <p className="text-2xl font-bold mb-4">$ {product?.price}</p>
               <Button className="w-full mb-4">Start Free Trial</Button>
               <div className="flex items-center mb-4">
                 <Image
-                  src={product.vendor.logo}
-                  alt={product.vendor.name}
+                  src={'https://i.pinimg.com/originals/1d/9c/aa/1d9caa2718ff4c24b8716e830641ff3d.png'}
+                  alt={product?.owner.name || ''}
                   width={40}
                   height={40}
                   className="rounded-full mr-2"
                 />
                 <div>
-                  <h3 className="font-semibold">{product.vendor.name}</h3>
-                  <p className="text-sm text-muted-foreground">{product.vendor.bio}</p>
+                  <h3 className="font-semibold">{product?.owner.name}</h3>
+                  <p className="text-sm text-muted-foreground">{product?.owner.email}</p>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2">
+              {/* <div className="flex flex-wrap gap-2">
                 {product.categories.map((category) => (
                   <span key={category} className="bg-muted text-muted-foreground px-2 py-1 rounded text-sm">
                     {category}
                   </span>
                 ))}
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </div>

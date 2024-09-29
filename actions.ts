@@ -41,6 +41,30 @@ export async function getAllProducts() {
 }
 
 
+// Fetching products by productId, also extract the vendor details
+export async function getProductById(productId: string) {
+  const product = await prisma.product.findUnique({
+    where: {
+      id: productId,
+    },
+    include: {
+      owner: true,
+    },
+  });
+  return product;
+}
+
+
+// Fetching products by ownerId
+export async function getProductsByOwnerId(ownerId: string) {
+  const products = await prisma.product.findMany({
+    where: {
+      ownerId: ownerId,
+    },
+  });
+  return products;
+}
+
 // Create a new auction
 export async function createAuction(formData: FormData) {
   const { getUser } = getKindeServerSession();

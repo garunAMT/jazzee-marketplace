@@ -1,3 +1,4 @@
+import { getProductsByOwnerId } from "@/actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,24 +9,30 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { CheckCircle, Search, Star } from "lucide-react";
 import Image from "next/image";
-import prisma from "@/lib/db";
 import Link from "next/link";
 
 
 
-// fetching products from the database
-async function getProducts() {
-  const products = await prisma.product.findMany();
-  return products;
-}
-
 export default async function Component() {
-  // const [searchTerm, setSearchTerm] = useState("");
-  // const [negotiationFilter, setNegotiationFilter] = useState("all");
 
-  // const filteredProducts = products.filter((product) => {
+    // verifying the user
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+  
+    if (!user || !user.id) throw new Error("User not found");
+
+    // Fetching products
+    const products = await getProductsByOwnerId(user.id);
+
+    // These state variables should be used in a client component, not in a server component
+    // const [searchTerm, setSearchTerm] = useState("");
+    // const [negotiationFilter, setNegotiationFilter] = useState("all");
+
+    // Filtering should be done in a client component or with server actions
+    // const filteredProducts = products.filter((product) => {
   //   const matchesSearch =
   //     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
   //     product.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -38,8 +45,6 @@ export default async function Component() {
 
   //   return matchesSearch && matchesNegotiations;
   // });
-  
-  const products = await getProducts();
 
   return (
     <div className="container mx-auto p-4">
