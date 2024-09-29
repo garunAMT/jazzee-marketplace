@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import Link from "next/link"
-import { BarChart, Lock, Music, Users } from "lucide-react"
+import { BarChart, Lock, Users } from "lucide-react"
 import Testimonials from "@/components/shared/Testimonials"
 
 export default function Hero() {

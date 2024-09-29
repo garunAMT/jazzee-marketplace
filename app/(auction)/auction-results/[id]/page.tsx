@@ -22,10 +22,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Star, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { getAuctionById, getBidsByAuctionId } from "@/actions";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import AuctionResultDeclareCard from "@/components/shared/AuctionResultDeclareCard";
