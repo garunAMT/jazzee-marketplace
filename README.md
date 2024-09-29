@@ -81,6 +81,12 @@ The application uses a PostgreSQL database with the following main tables:
 
 These tables are interconnected to support the various functionalities of the auction system, allowing for efficient querying and data management throughout the application.
 
+Schema Visualisation
+
+![image](https://github.com/user-attachments/assets/9e15a559-8db4-4a3a-af05-b500c5d5ab4d)
+
+
+
 
 
 
