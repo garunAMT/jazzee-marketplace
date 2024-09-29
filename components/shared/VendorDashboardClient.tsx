@@ -33,13 +33,6 @@ export default function VendorDashboardClient({ auctions }: { auctions: Auction[
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
 
-  const handleSubmitQuote = (auctionId: string, quote: number, comment: string) => {
-    setSubmittedQuotes((prev) => ({
-      ...prev,
-      [auctionId]: { quote, comment },
-    }));
-  };
-
   const filteredAuctions = auctions.filter((auction) => {
     const matchesSearch = auction.auctionName.toLowerCase().includes(searchTerm.toLowerCase());
     const now = new Date();

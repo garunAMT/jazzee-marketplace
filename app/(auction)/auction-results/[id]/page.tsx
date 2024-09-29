@@ -200,7 +200,7 @@ export default async function AuctionResults({ params }: { params: { id: string 
         </Card>
 
       </div>
-      {auctionStatus.status === "Closed" && (
+      {auctionStatus.status === "Closed" && auctionData && (
         <AuctionResultDeclareCard auctionData={auctionData} />
       )}
     </div>
