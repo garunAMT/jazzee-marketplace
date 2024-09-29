@@ -43,7 +43,7 @@ export default async function Component() {
         </div>
       </div>
       {products.length === 0 ? (
-        <p>You haven't added any products yet.</p>
+        <p>You haven&apos;'t added any products yet.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {products.map((product, index) => (
