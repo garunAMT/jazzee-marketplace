@@ -99,7 +99,7 @@ export async function createAuction(formData: FormData) {
 
 // fetch auctions by auctionId also show the products details in the auction
 export async function getAuctionById(auctionId: string) {
-  await updateEndedAuctions();
+  // await updateEndedAuctions();
   const auctionData = await prisma.auction.findUnique({
     where: {
       id: auctionId,
