@@ -29,7 +29,6 @@ interface Auction {
 }
 
 export default function VendorDashboardClient({ auctions }: { auctions: Auction[] }) {
-  const [submittedQuotes, setSubmittedQuotes] = useState<Record<string, { quote: number; comment: string }>>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
 
@@ -57,7 +56,8 @@ export default function VendorDashboardClient({ auctions }: { auctions: Auction[
             <span className="font-semibold">Live Auctions:</span> {auctions.length}
           </div>
           <div>
-            <span className="font-semibold">Quotes Submitted:</span> {Object.keys(submittedQuotes).length}
+            <span className="font-semibold">Quotes Submitted:</span> 
+            {/* {Object.keys(submittedQuotes).length} */}
           </div>
           <Button variant="outline" size="sm">
             <Bell className="mr-2 h-4 w-4" />
