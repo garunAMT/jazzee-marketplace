@@ -29,11 +29,11 @@ interface Auction {
 }
 
 export default function VendorDashboardClient({ auctions }: { auctions: Auction[] }) {
-  const [submittedQuotes, setSubmittedQuotes] = useState<Record<number, { quote: number; comment: string }>>({});
+  const [submittedQuotes, setSubmittedQuotes] = useState<Record<string, { quote: number; comment: string }>>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
 
-  const handleSubmitQuote = (auctionId: number, quote: number, comment: string) => {
+  const handleSubmitQuote = (auctionId: string, quote: number, comment: string) => {
     setSubmittedQuotes((prev) => ({
       ...prev,
       [auctionId]: { quote, comment },
@@ -102,7 +102,6 @@ export default function VendorDashboardClient({ auctions }: { auctions: Auction[
             <AuctionCard
               key={auction.id}
               auction={auction}
-              onSubmitQuote={(id: number, quote: number, comment: string) => handleSubmitQuote(id, quote, comment)}
             />
           ))}
         </div>

@@ -47,10 +47,8 @@ interface Auction {
 
 export default function AuctionCard({
   auction,
-  onSubmitQuote,
 }: {
   auction: Auction;
-  onSubmitQuote: (id: number, quote: number, comment: string) => void;
 }) {
 
   // dialog open state

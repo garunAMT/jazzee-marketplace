@@ -3,10 +3,15 @@ import ConfettiEffect from "./Confetti";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { Button } from "../ui/button";
 
+interface AuctionData {
+  winnerId: string | null;
+  winningPrice: number | null;
+}
+
 export default async function AuctionResultDeclareCard({
   auctionData,
 }: {
-  auctionData: any;
+  auctionData: AuctionData;
 }) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
